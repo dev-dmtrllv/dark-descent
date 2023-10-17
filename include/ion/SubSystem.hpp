@@ -1,7 +1,13 @@
 #pragma once
 
 #include "ion/Config.hpp"
+#include "ion/Logger.hpp"
+#include "ion/EventManager.hpp"
 
+#define SUB_SYSTEM_CTORS(__NAME__, __EVENT__) __NAME__(Engine& engine) : SubSystem<__NAME__, __EVENT__>(engine) {} \
+		__NAME__(const __NAME__&) = delete; \
+		__NAME__(__NAME__&&) = delete; \
+		virtual ~__NAME__() {}
 namespace ion
 {
 	class Engine;
@@ -18,11 +24,11 @@ namespace ion
 		virtual void terminate() {}
 	};
 
-	template<typename T>
+	template<typename T, typename Event>
 	class SubSystem : public SubSystemBase
 	{
 	public:
-		SubSystem() : SubSystemBase() {}
+		SubSystem(Engine& engine) : SubSystemBase(), engine_(engine), eventManager_() {}
 		virtual ~SubSystem() {}
 
 		virtual const char* name() const override { return typeid(T).name(); }
@@ -40,6 +46,12 @@ namespace ion
 
 		virtual void onInitialize(const Config& config) = 0;
 		virtual void onTerminate() = 0;
+
+		inline EventManager<Event>& events() { return eventManager_; }
+
+	protected:
+		Engine& engine_;
+		EventManager<Event> eventManager_;
 	};
 
 	class SubSystemRegistry
@@ -71,7 +83,7 @@ namespace ion
 			
 			Logger::get().debug("Registered SubSystem ", typeid(T).name());
 
-			T* system = new T();
+			T* system = new T(engine_);
 			subSystems_.emplace(std::piecewise_construct, std::forward_as_tuple(hash), std::forward_as_tuple(system));
 			return *system;
 		}
@@ -79,11 +91,8 @@ namespace ion
 		template<typename T>
 		T& getSystem() const
 		{
-			if (status_ == Status::Constructed)
+			if (status_ != Status::Initialized)
 				throw std::runtime_error("SubSystems are not initialized yet!");
-
-			if (status_ == Status::Terminated)
-				throw std::runtime_error("All subSystems are terminated!");
 
 			const std::size_t hash = typeid(T).hash_code();
 			
@@ -108,6 +117,7 @@ namespace ion
 			{
 				Logger::get().debug("Initializing SubSystem ", value->name(), "...");
 				value->initialize(config);
+				initializationOrder_.emplace_back(value);
 				Logger::get().debug("SubSystem ", value->name(), " initialized!");
 			}
 
@@ -126,10 +136,11 @@ namespace ion
 
 			for (const auto& system : initializationOrder_)
 			{	
-				Logger::get().debug("Terminating SubSystem ", system->name(), "...");
+				const char* name = system->name();
+				Logger::get().debug("Terminating SubSystem ", name, "...");
 				system->terminate();
 				delete system;
-				Logger::get().debug("SubSystem ", system->name(), " terminated!");
+				Logger::get().debug("SubSystem ", name, " terminated!");
 			}
 
 			status_ = Status::Terminated;

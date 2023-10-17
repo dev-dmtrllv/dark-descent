@@ -12,9 +12,13 @@ namespace ion
 	void Logger::Message::log(std::fstream& file) const
 	{
 		auto t = std::chrono::system_clock::to_time_t(time);
-		auto s = std::localtime(&t);
+		// auto s = std::localtime(&t);
+		struct tm s;
+		// struct tm const * sptr = &s;
+		// TODO: check errno
+		auto er = localtime_s(&s, &t);
 		char buf[29] = { '\0' };
-		std::strftime(buf, 21, "%Y-%m-%dT %H:%M:%S", s);
+		std::strftime(buf, 21, "%Y-%m-%dT %H:%M:%S", &s);
 
 		const std::size_t index = static_cast<std::size_t>(level);
 		auto levelString = levels_[index];
@@ -23,13 +27,13 @@ namespace ion
 		auto color = colors_[index];
 		
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
-		printf("[%s]", levelString);
+		printf("%s", levelString);
 
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), resetColor_);
 		printf(" %s\n", msg.data());
 #endif
 
-		file << std::format("{} [{}] {}\n", buf, levelString, msg.data());
+		file << std::format("{} {} {}\n", buf, levelString, msg.data());
 	}
 
 	std::optional<Logger> Logger::instance_;
@@ -43,11 +47,11 @@ namespace ion
 	};
 
 	std::array<const char*, 5> Logger::levels_ = {
-		"INFO",
-		"DEBUG",
-		"WARN",
-		"ERROR",
-		"FATAL",
+		"[INFO]",
+		"[DEBUG]",
+		"[WARN]",
+		"[ERROR]",
+		"[FATAL]",
 	};
 
 	const WORD Logger::resetColor_ = 0xF;

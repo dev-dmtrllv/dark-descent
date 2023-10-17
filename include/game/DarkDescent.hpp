@@ -8,5 +8,6 @@ public:
 	DarkDescent();
 
 protected:
-	virtual void onConfigure(ion::Engine& engine, ion::Config& config) override;
+	virtual void onConfigure(ion::Config& config) override;
+	virtual void onInitialize(ion::Engine& engine) override;
 };

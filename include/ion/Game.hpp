@@ -12,10 +12,12 @@ namespace ion
 		Game();
 		virtual ~Game();
 
-		void configure(Engine& engine, Config& config);
+		void configure(Config& config);
+		void initialize(Engine& engine);
 
 	protected:
-		virtual void onConfigure(Engine& engine, Config& config);
+		virtual void onConfigure(Config& config);
+		virtual void onInitialize(Engine& engine);
 		virtual void onStart();
 		virtual void onStop();
 	};

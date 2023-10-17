@@ -6,7 +6,8 @@ namespace ion
 {
 	Engine::Engine(Maybe<Game&> game):
 		game_(game),
-		subSystems_(*this)
+		subSystems_(*this),
+		eventManager_()
 	{
 
 	}
@@ -25,15 +26,23 @@ namespace ion
 		subSystems_.registerSystem<WindowManager>();
 
 		Config config;
-		game_.get().configure(*this, config);
+
+		auto& game = game_.get();
+		
+		game.configure(config);
 
 		subSystems_.initialize(config);
 		
+		game.initialize(*this);
+
+		subSystems_.getSystem<WindowManager>().create(config.name);
+
 		Logger::get().info("Engine initialized!");
 	}
 
 	int Engine::start()
 	{
+		subSystems_.getSystem<WindowManager>().run();
 		return 0;
 	}
 

@@ -4,13 +4,15 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/include/**",
+                "${workspaceFolder}/include/ion/**",
+                "${workspaceFolder}/include/game/**",
             ],
             "windowsSdkVersion": "10.0.22000.0",
             "compilerPath": "cl.exe",
             "cStandard": "c23",
             "cppStandard": "c++23",
             "intelliSenseMode": "windows-msvc-x64",
-            // "configurationProvider": "ms-vscode.cmake-tools"
+            "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4

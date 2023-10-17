@@ -6,6 +6,7 @@
 #include "ion/Debug.hpp"
 #include "ion/Maybe.hpp"
 #include "ion/SubSystem.hpp"
+#include "ion/EventManager.hpp"
 
 namespace ion
 {
@@ -14,17 +15,30 @@ namespace ion
 	class Engine
 	{
 	public:
+		struct Event
+		{
+
+		};
+
 		template<typename T>
 		static int run()
 		{
 			DebugConsole console;
-			
+
 			return Logger::scoped<int>([](Logger& logger)
 			{
-				T game;
-				Engine engine(game);
-				engine.initialize();
-				return engine.start();
+				try
+				{
+					T game;
+					Engine engine(game);
+					engine.initialize();
+					return engine.start();
+				}
+				catch(const std::runtime_error& e)
+				{
+					logger.fatal(e);
+					return 1;
+				}
 			});
 		}
 
@@ -33,6 +47,10 @@ namespace ion
 		Engine(Engine&&) = delete;
 		~Engine();
 
+		inline EventManager<Event>& events() { return eventManager_; }
+
+		inline SubSystemRegistry& systems() { return subSystems_; }
+
 	private:
 		void initialize();
 		int start();
@@ -40,5 +58,6 @@ namespace ion
 
 		Maybe<Game&> game_;
 		SubSystemRegistry subSystems_;
+		EventManager<Event> eventManager_;
 	};
 }

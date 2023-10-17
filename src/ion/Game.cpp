@@ -6,12 +6,18 @@ namespace ion
 	Game::Game() {}
 	Game::~Game() {}
 
-	void Game::configure(Engine& engine, Config& config)
+	void Game::configure(Config& config)
 	{
-		onConfigure(engine, config);
+		onConfigure(config);
 	}
 
-	void Game::onConfigure(Engine& engine, Config& config) {}
+	void Game::initialize(Engine& engine)
+	{
+		onInitialize(engine);
+	}
+
+	void Game::onConfigure(Config& config) {}
+	void Game::onInitialize(Engine& engine) {}
 	void Game::onStart() {}
 	void Game::onStop() {}
 }
