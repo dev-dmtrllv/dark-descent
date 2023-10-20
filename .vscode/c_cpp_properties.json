@@ -4,8 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/include/**",
-                "${workspaceFolder}/include/ion/**",
-                "${workspaceFolder}/include/game/**",
+                "${workspaceFolder}/include"
             ],
             "windowsSdkVersion": "10.0.22000.0",
             "compilerPath": "cl.exe",

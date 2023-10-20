@@ -1,6 +1,8 @@
 #include "ion/Engine.hpp"
 #include "ion/Game.hpp"
 #include "ion/WindowManager.hpp"
+#include "ion/GraphicsManager.hpp"
+#include "ion/SceneManager.hpp"
 
 namespace ion
 {
@@ -24,6 +26,8 @@ namespace ion
 		Logger::get().info("Initializing engine...");
 
 		subSystems_.registerSystem<WindowManager>();
+		subSystems_.registerSystem<GraphicsManager>();
+		subSystems_.registerSystem<SceneManager>();
 
 		Config config;
 
@@ -42,6 +46,7 @@ namespace ion
 
 	int Engine::start()
 	{
+		game_.get().start(*this);
 		subSystems_.getSystem<WindowManager>().run();
 		return 0;
 	}

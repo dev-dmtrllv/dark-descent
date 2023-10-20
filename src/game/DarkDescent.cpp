@@ -1,6 +1,6 @@
 #include "game/DarkDescent.hpp"
-#include "ion/Engine.hpp"
-#include "ion/WindowManager.hpp"
+#include "game/scenes/TestScene.hpp"
+#include "game/components/Position.hpp"
 
 DarkDescent::DarkDescent() : ion::Game() {}
 
@@ -17,4 +17,13 @@ void DarkDescent::onInitialize(ion::Engine& engine)
 	{
 		ion::Logger::get().debug("Created window with title ", e.window.title());
 	});
+
+	engine.ecs().registerComponent<Position>();
+}
+
+void DarkDescent::onStart(ion::Engine& engine)
+{
+	auto& sm = engine.systems().getSystem<ion::SceneManager>();
+
+	sm.load<TestScene>();
 }

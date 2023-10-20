@@ -113,6 +113,8 @@ namespace ion
 			if (status_ == Status::Terminated)
 				throw std::runtime_error("All subSystems are terminated!");
 
+			status_ = Status::Initialized;
+
 			for (const auto& [key, value] : subSystems_)
 			{
 				Logger::get().debug("Initializing SubSystem ", value->name(), "...");
@@ -120,8 +122,6 @@ namespace ion
 				initializationOrder_.emplace_back(value);
 				Logger::get().debug("SubSystem ", value->name(), " initialized!");
 			}
-
-			status_ = Status::Initialized;
 		}
 
 		void terminate()

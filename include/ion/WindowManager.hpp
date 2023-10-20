@@ -15,6 +15,7 @@ namespace ion
 	{
 	public:
 		static const wchar_t* CLASS_NAME;
+		
 	private:
 		static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

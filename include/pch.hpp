@@ -23,6 +23,10 @@
 #pragma comment(lib, "dbghelp.lib")
 #pragma comment(lib, "shlwapi.lib")
 
+#include <GL/GL.h>
+
+#pragma comment (lib, "opengl32.lib")
+
 #endif
 // ----------------  WINDOWS  ---------------- //
 

@@ -7,6 +7,7 @@
 #include "ion/Maybe.hpp"
 #include "ion/SubSystem.hpp"
 #include "ion/EventManager.hpp"
+#include "ion/ecs/Ecs.hpp"
 
 namespace ion
 {
@@ -51,6 +52,8 @@ namespace ion
 
 		inline SubSystemRegistry& systems() { return subSystems_; }
 
+		inline ecs::Ecs& ecs() { return ecs_; }
+
 	private:
 		void initialize();
 		int start();
@@ -59,5 +62,6 @@ namespace ion
 		Maybe<Game&> game_;
 		SubSystemRegistry subSystems_;
 		EventManager<Event> eventManager_;
+		ecs::Ecs ecs_;
 	};
 }

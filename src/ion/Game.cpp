@@ -16,8 +16,13 @@ namespace ion
 		onInitialize(engine);
 	}
 
+	void Game::start(Engine& engine)
+	{
+		onStart(engine);
+	}
+
 	void Game::onConfigure(Config& config) {}
 	void Game::onInitialize(Engine& engine) {}
-	void Game::onStart() {}
+	void Game::onStart(Engine& engine) {}
 	void Game::onStop() {}
 }

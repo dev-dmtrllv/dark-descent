@@ -14,11 +14,12 @@ namespace ion
 
 		void configure(Config& config);
 		void initialize(Engine& engine);
+		void start(Engine& engine);
 
 	protected:
 		virtual void onConfigure(Config& config);
 		virtual void onInitialize(Engine& engine);
-		virtual void onStart();
+		virtual void onStart(Engine& engine);
 		virtual void onStop();
 	};
 }
